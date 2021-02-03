@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import no.uia.ikt205.pomodoro.util.millisecondsToDescriptiveTime
@@ -31,31 +32,36 @@ class MainActivity : AppCompatActivity() {
 
         startButton = findViewById<Button>(R.id.startCountdownButton)
         startButton.setOnClickListener(){
-            startCountDown(it)
-        }
-        add30 = findViewById<Button>(R.id.add30Button)
-        add30.setOnClickListener(){
-            changeCountDown(30)
+            startCountDown()
         }
 
-        add60 = findViewById<Button>(R.id.add60Button)
-        add60.setOnClickListener(){
-            changeCountDown(60)
-        }
-        add90 = findViewById<Button>(R.id.add90Button)
-        add90.setOnClickListener(){
-            changeCountDown(90)
-        }
-        add120 = findViewById<Button>(R.id.add120Button)
-        add120.setOnClickListener(){
-            changeCountDown(120)
-        }
+        val seek = findViewById<SeekBar>(R.id.timeSeek)
+        seek?.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?,
+                                           progress: Int, fromUser: Boolean) {
+                // nothing yet
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // nothing yet
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                // nothing yet
+                Toast.makeText(this@MainActivity, "Time set:g " + seek.progress + "seconds",
+                Toast.LENGTH_SHORT).show()
+
+                changeCountDown(seek.progress)
+            }
+        })
+
 
         countdownDisplay = findViewById<TextView>(R.id.countDownView)
 
     }
 
-    fun startCountDown(v: View){
+    fun startCountDown(){
 
         if(flag){
             timer.cancel()
@@ -81,8 +87,8 @@ class MainActivity : AppCompatActivity() {
         countdownDisplay.text = millisecondsToDescriptiveTime(timeInMs)
     }
 
-    fun changeCountDown(Multiplier:Long){
-        realTime = timeToCountDownInMs/5 * 60 * Multiplier
+    fun changeCountDown(Multiplier:Int){
+        realTime = timeToCountDownInMs/5 * Multiplier
     }
 
 }

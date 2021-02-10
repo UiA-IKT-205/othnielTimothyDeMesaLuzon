@@ -8,23 +8,25 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.EditText
 import no.uia.ikt205.pomodoro.util.millisecondsToDescriptiveTime
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var timer:CountDownTimer
+    lateinit var pause:CountDownTimer
     lateinit var startButton:Button
-    lateinit var add30:Button
-    lateinit var add60:Button
-    lateinit var add90:Button
-    lateinit var add120:Button
     lateinit var countdownDisplay:TextView
+    lateinit var countdownText:TextView
+    lateinit var pauseText:TextView
+    lateinit var repText:EditText
 
-    var realTime: Long = 0L
-    var flag = false
-
-    val timeToCountDownInMs = 5000L
+    var realTime: Long = 15L // Used to set countdown value
+    var pauseTime: Long = 15L // Used to set pause value
+    var flag = false // Used to check if a timer is currently ongoing
+    var repNumber = 1
     val timeTicks = 1000L
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?,
                                            progress: Int, fromUser: Boolean) {
-                // nothing yet
+                countdownText.text = getString(R.string.countdown_text, seek.progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -49,15 +51,46 @@ class MainActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 // nothing yet
-                Toast.makeText(this@MainActivity, "Time set:g " + seek.progress + "seconds",
-                Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Time set: " + seek.progress +
+                        " minutes", Toast.LENGTH_SHORT).show()
 
                 changeCountDown(seek.progress)
             }
         })
 
+        val pause = findViewById<SeekBar>(R.id.pauseSeek)
+        pause?.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?,
+                                           progress: Int, fromUser: Boolean) {
+                pauseText.text = getString(R.string.pause_text, pause.progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // nothing yet
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Toast.makeText(this@MainActivity, "Break set: " + pause.progress +
+                        " minutes", Toast.LENGTH_SHORT).show()
+
+                changePause(pause.progress)
+            }
+        })
+
+        repText = findViewById<EditText>(R.id.repText)
+        repText.setOnClickListener(){
+
+            val text = repText.text
+            repNumber = repText.text.toString().toInt()
+            Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+        }
+
 
         countdownDisplay = findViewById<TextView>(R.id.countDownView)
+        countdownText = findViewById<TextView>(R.id.timeSeekText)
+        pauseText = findViewById<TextView>(R.id.pauseSeekText)
+
 
     }
 
@@ -68,11 +101,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         flag = true
+        for(i in 1..repNumber) Toast.makeText(this@MainActivity, i, Toast.LENGTH_SHORT).show()
 
         timer = object : CountDownTimer(realTime,timeTicks) {
             override fun onFinish() {
                 flag = false
-                Toast.makeText(this@MainActivity,"Arbeidsøkt er ferdig", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity,"Arbeidsøkt er ferdig",
+                        Toast.LENGTH_SHORT).show()
+                pause.start()
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -80,7 +116,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        pause = object : CountDownTimer(pauseTime, timeTicks) {
+            override fun onFinish() {
+                Toast.makeText(this@MainActivity, "Pause er ferdig",
+                        Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                updateCountDownDisplay(millisUntilFinished)
+            }
+        }
+
         timer.start()
+
     }
 
     fun updateCountDownDisplay(timeInMs:Long){
@@ -88,7 +136,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun changeCountDown(Multiplier:Int){
-        realTime = timeToCountDownInMs/5 * Multiplier
+        realTime = timeTicks * Multiplier
+    }
+
+    fun changePause(Multiplier: Int){
+        pauseTime = timeTicks * Multiplier
     }
 
 }

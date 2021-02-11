@@ -1,5 +1,6 @@
 package no.uia.ikt205.pomodoro
 
+import kotlin.coroutines.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     var realTime: Long = 15L // Used to set countdown value
     var pauseTime: Long = 15L // Used to set pause value
     var flag = false // Used to check if a timer is currently ongoing
-    var repNumber = 1
+    var repNumber = 0
     val timeTicks = 1000L
 
 
@@ -98,34 +99,40 @@ class MainActivity : AppCompatActivity() {
 
         if(flag){
             timer.cancel()
+            pause.cancel()
         }
 
         flag = true
-        for(i in 1..repNumber) Toast.makeText(this@MainActivity, i, Toast.LENGTH_SHORT).show()
 
         timer = object : CountDownTimer(realTime,timeTicks) {
             override fun onFinish() {
-                flag = false
+
                 Toast.makeText(this@MainActivity,"Arbeidsøkt er ferdig",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT).show()
                 pause.start()
-            }
-
-            override fun onTick(millisUntilFinished: Long) {
-               updateCountDownDisplay(millisUntilFinished)
-            }
-        }
-
-        pause = object : CountDownTimer(pauseTime, timeTicks) {
-            override fun onFinish() {
-                Toast.makeText(this@MainActivity, "Pause er ferdig",
-                        Toast.LENGTH_SHORT).show()
             }
 
             override fun onTick(millisUntilFinished: Long) {
                 updateCountDownDisplay(millisUntilFinished)
             }
         }
+
+        pause = object : CountDownTimer(pauseTime, timeTicks) {
+            override fun onFinish() {
+                Toast.makeText(this@MainActivity, "Pause er ferdig",
+                    Toast.LENGTH_SHORT).show()
+                if(repNumber > 1){2
+                    timer.start()
+                    repNumber -= 1
+                }
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                updateCountDownDisplay(millisUntilFinished)
+            }
+        }
+
+
 
         timer.start()
 

@@ -27,8 +27,7 @@ class MainActivity : AppCompatActivity() {
     var flag = false // Used to check if a timer is currently ongoing
     var repNumber = 0
     val timeTicks = 1000L
-
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -121,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             override fun onFinish() {
                 Toast.makeText(this@MainActivity, "Pause er ferdig",
                     Toast.LENGTH_SHORT).show()
-                if(repNumber > 1){2
+                if(repNumber > 0){
                     timer.start()
                     repNumber -= 1
                 }
@@ -132,8 +131,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-
         timer.start()
 
     }
@@ -143,11 +140,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun changeCountDown(Multiplier:Int){
-        realTime = timeTicks * Multiplier
+        realTime = timeTicks * 60 * Multiplier
     }
 
     fun changePause(Multiplier: Int){
-        pauseTime = timeTicks * Multiplier
+        pauseTime = timeTicks * 60 * Multiplier
     }
 
 }

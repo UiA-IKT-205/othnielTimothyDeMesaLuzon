@@ -6,4 +6,11 @@
     <string name="add60Button">+60</string>
     <string name="add90Button">+90</string>
     <string name="add120Button">+120</string>
+    <string name="default_TSeek_Text">Set Countdown: </string>
+    <string name="default_PSeek_Text">Set Pause: </string>
+    <string name="default_rep_text"> </string>
+
+    <string name="countdown_text">Set Countdown: %d minutes</string>
+    <string name="pause_text">Set Pause: %d minutes</string>
+    <string name="rep_text">Reps: %s reps</string>
 </resources>

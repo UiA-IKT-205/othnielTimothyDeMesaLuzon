@@ -14,6 +14,7 @@ class Piano : Fragment() {
     private val binding get() = _binding!!
 
     private val naturals = listOf("C", "D", "E" ,"F", "G", "A", "B", "C2", "D2", "E2") // White keys on the piano
+    private val sharps = listOf("C#", "D#", "F#", "G#", "A#") // Black keys on the piano
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,20 @@ class Piano : Fragment() {
             }
 
             ft.add(view.pianoKeys.id, naturalKeys, "note_$it")
+        }
+
+        sharps.forEach{
+            val sharpKeys = SharpKeysFragment.newInstance(it)
+
+            sharpKeys.onKeyDown = {
+                println("Sharp down $it")
+            }
+
+            sharpKeys.onKeyUp = {
+                println("Sharp up $it")
+            }
+
+            ft.add(view.pianoKeys.id, sharpKeys, "note_$it")
         }
 
         ft.commit()

@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import com.example.mypiano.databinding.FragmentNaturalKeysBinding
 import com.example.mypiano.databinding.FragmentSharpKeysBinding
 import kotlinx.android.synthetic.main.fragment_natural_keys.view.*
+import kotlinx.android.synthetic.main.fragment_sharp_keys.view.*
 
 class SharpKeysFragment : Fragment() {
 
@@ -34,7 +34,7 @@ class SharpKeysFragment : Fragment() {
         _binding = FragmentSharpKeysBinding.inflate(inflater)
         val view = binding.root // remember to add !! at binding get()
 
-        view.naturalKey.setOnTouchListener(object: View.OnTouchListener{
+        view.sharpKey.setOnTouchListener(object: View.OnTouchListener{
 
             var startTime = 0
 

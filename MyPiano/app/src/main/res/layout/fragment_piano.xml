@@ -10,6 +10,7 @@
         android:id="@+id/pianoKeys"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_marginBottom="50dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +29,14 @@
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/startScoreBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start"
+        app:layout_constraintEnd_toStartOf="@id/saveScoreBt"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/saveScoreBt"

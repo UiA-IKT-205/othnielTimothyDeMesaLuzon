@@ -74,19 +74,36 @@ class Piano : Fragment() {
         view.saveScoreBt.setOnClickListener {
             var fileName = view.fileNameTextEdit.text.toString()
             val path = this.activity?.getExternalFilesDir(null)
-            if (score.count() > 0 && fileName.isNotEmpty() && path != null){
-                fileName = "$fileName.music"
-                FileOutputStream(File(path, fileName), true).bufferedWriter().use { writer ->
-                    // bufferedWriter exists within this scope
-                    score.forEach {
-                        writer.write( "${it.toString()}\n")
+            if (score.count() > 0 && path != null){
+
+                if(fileName.isNotEmpty()){
+
+                    fileName = "$fileName.music"
+                    if (checkFileName(fileName, path)){
+                        print("$fileName does exist. Please try another name. \n")
+
+                    } else {
+                        FileOutputStream(File(path, fileName), true).bufferedWriter().use { writer ->
+                            // bufferedWriter exists within this scope
+                            score.forEach {
+                                writer.write( "${it.toString()}\n")
+                            }
+                        }
+                        println("$fileName saved to $path")
                     }
+                } else {
+                    println("Please provide a name for the file. \n")
                 }
-                println(fileName)
             } else {
-                println("Provide File Name!")
+                println("File is empty! \n")
             }
         }
         return view
     }
+
+    fun checkFileName(name: String, path: File): Boolean { // Function checks if name is already in use, given path
+        var file = File(path, name)
+        return file.exists()
+    }
+
 }

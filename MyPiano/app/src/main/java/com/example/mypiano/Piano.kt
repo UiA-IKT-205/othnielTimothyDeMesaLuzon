@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.mypiano.data.Note
 import com.example.mypiano.databinding.FragmentPianoBinding
 import kotlinx.android.synthetic.main.fragment_piano.view.*
+import java.io.File
+import java.io.FileOutputStream
 
 class Piano : Fragment() {
 
@@ -15,6 +18,7 @@ class Piano : Fragment() {
 
     private val naturals = listOf("C", "D", "E" ,"F", "G", "A", "B", "C2", "D2", "E2") // White keys on the piano
     private val sharps = listOf("C#", "D#", "F#", "G#", "A#","C#2","D#2", "F#2", "G#2", "A#2") // Black keys on the piano
+    private var score:MutableList<Note> = mutableListOf<Note>() // Score == sheet music
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,52 +30,63 @@ class Piano : Fragment() {
     ): View? {
 
         _binding = FragmentPianoBinding.inflate(layoutInflater)
-        val view = binding.root
 
+        val view = binding.root
         val fm = childFragmentManager
         val ft = fm.beginTransaction()
 
-        naturals.forEach{
-            val naturalKeys = NaturalKeysFragment.newInstance(it)
-            val sharpKeys = SharpKeysFragment.newInstance(sharps[naturals.indexOf(it)])
+        naturals.forEach{ originalNoteVal ->
+            val naturalKeys = NaturalKeysFragment.newInstance(originalNoteVal)
+            val sharpKeys = SharpKeysFragment.newInstance(sharps[naturals.indexOf(originalNoteVal)])
+            var startPlay:Long = 0
 
-            naturalKeys.onKeyDown = {
-                println("Piano key down $it")
+            naturalKeys.onKeyDown = { note ->
+                println("Piano key down $note")
+                startPlay = System.nanoTime()
             }
 
             naturalKeys.onKeyUp = {
-                println("Piano key up $it")
+                var endPlay = System.nanoTime()
+                val note = Note(it, startPlay, endPlay)
+                score.add(note)
+                println("Piano key up $note")
             }
 
-            sharpKeys.onKeyDown = {
-                println("Sharp down $it")
+            sharpKeys.onKeyDown = { note ->
+                println("Sharp down $note")
+                startPlay = System.nanoTime()
             }
 
             sharpKeys.onKeyUp = {
-                println("Sharp up $it")
+                var endPlay = System.nanoTime()
+                val note = Note(it, startPlay, endPlay)
+                score.add(note)
+                println("Sharp up $note")
             }
 
-            ft.add(view.pianoKeys.id, naturalKeys, "note_$it")
+            ft.add(view.pianoKeys.id, naturalKeys, "note_$originalNoteVal")
 
-            ft.add(view.pianoKeys.id, sharpKeys, "note_$it")
+            ft.add(view.pianoKeys.id, sharpKeys, "note_$originalNoteVal")
         }
-
-        /*sharps.forEach{
-            val sharpKeys = SharpKeysFragment.newInstance(it)
-
-            sharpKeys.onKeyDown = {
-                println("Sharp down $it")
-            }
-
-            sharpKeys.onKeyUp = {
-                println("Sharp up $it")
-            }
-
-            ft.add(view.pianoKeys.id, sharpKeys, "note_$it")
-        }*/
 
         ft.commit()
 
+        view.saveScoreBt.setOnClickListener {
+            var fileName = view.fileNameTextEdit.text.toString()
+            val path = this.activity?.getExternalFilesDir(null)
+            if (score.count() > 0 && fileName.isNotEmpty() && path != null){
+                fileName = "$fileName.music"
+                FileOutputStream(File(path, fileName), true).bufferedWriter().use { writer ->
+                    // bufferedWriter exists within this scope
+                    score.forEach {
+                        writer.write( "${it.toString()}\n")
+                    }
+                }
+                println(fileName)
+            } else {
+                println("Provide File Name!")
+            }
+        }
         return view
     }
 }

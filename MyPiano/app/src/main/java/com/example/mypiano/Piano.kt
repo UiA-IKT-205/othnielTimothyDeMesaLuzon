@@ -1,9 +1,11 @@
 package com.example.mypiano
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.example.mypiano.data.Note
 import com.example.mypiano.databinding.FragmentPianoBinding
@@ -12,6 +14,8 @@ import java.io.File
 import java.io.FileOutputStream
 
 class Piano : Fragment() {
+
+    var onSave:((file: Uri) -> Unit)? = null
 
     private var _binding:FragmentPianoBinding? = null
     private val binding get() = _binding!!
@@ -83,11 +87,14 @@ class Piano : Fragment() {
                         print("$fileName does exist. Please try another name. \n")
 
                     } else {
-                        FileOutputStream(File(path, fileName), true).bufferedWriter().use { writer ->
+                        val file = File(path, fileName)
+                        FileOutputStream(file, true).bufferedWriter().use { writer ->
                             // bufferedWriter exists within this scope
                             score.forEach {
                                 writer.write( "${it.toString()}\n")
                             }
+
+                            this.onSave?.invoke(file.toUri());
                         }
                         println("$fileName saved to $path")
                     }

@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">MyList</string>
+    <string name="app_name">rememberMe</string>
+    <string name="Head" >
+        <br>
+            <big>
+                <u>
+                    <b>Remind yourself on what to do</b> \n
+                </u>
+            </big>
+        </br>
+        <br>
+            <i>Say goodbye to forgetfulness</i>
+        </br>
+    </string>
 </resources>

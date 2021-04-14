@@ -80,8 +80,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:layout_marginStart="20dp"
-            android:text="@string/new_entry"
+            android:text="@string/new_entry" />
 
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

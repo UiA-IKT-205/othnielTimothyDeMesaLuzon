@@ -21,7 +21,10 @@ class ListEditActivity : AppCompatActivity(){
         } else {
             finish()
         }
-        binding.listHeader.text = todoList.title
+
+        binding.listHeader.setText(todoList.title)
+        binding.listHeader.setOnClickListener { newTitle() }
+
         binding.entryRecycler.adapter = EntryRecyclerAdapter(todoList)
         binding.newEntryButton.setOnClickListener { newEntry() }
     }
@@ -29,5 +32,16 @@ class ListEditActivity : AppCompatActivity(){
     fun newEntry() {
         val entry = binding.newEntryEditText.text.toString()
         EntryRecyclerAdapter(todoList).updateEntryRecycler(entry)
+    }
+
+    fun newTitle() {
+
+        val newtitle = binding.listHeader.text.toString()
+        if (newtitle == null) {
+            binding.listHeader.setText(todoList.title)
+        } else {
+            binding.listHeader.setText(newtitle)
+        }
+
     }
 }

@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ikt205.project.mylist.data.TodoList
 import ikt205.project.mylist.databinding.ActivityMainBinding
 
+const val EXTRA_INFO = "MainActivity"
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private fun onListClicked(todoList: TodoList): Unit {
 
         val intent = Intent(this, ListEditActivity::class.java).apply {
-            putExtra("MainActivity", todoList)
+            putExtra(EXTRA_INFO, todoList)
         }
 
         startActivity(intent)
